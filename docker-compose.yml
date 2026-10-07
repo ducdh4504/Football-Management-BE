@@ -1,0 +1,153 @@
+services:
+
+  # =========================
+  # PostgreSQL
+  # =========================
+  postgres:
+    image: postgres:17
+    container_name: football-management-postgres
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+    ports:
+      - "${DB_PORT:-5432}:5432"
+
+    volumes:
+      - football_postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - football-network
+
+
+  # =========================
+  # Redis
+  # =========================
+  redis:
+    image: redis:7-alpine
+    container_name: football-management-redis
+
+    restart: unless-stopped
+
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+
+    volumes:
+      - football_redis_data:/data
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - football-network
+
+
+  # =========================
+  # Spring Boot Backend
+  # =========================
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: football-management-api
+
+    restart: unless-stopped
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+      redis:
+        condition: service_healthy
+
+    environment:
+      # =========================
+      # PostgreSQL
+      # =========================
+
+      # Quan trọng:
+      # container không dùng localhost để kết nối PostgreSQL
+      # mà dùng tên service "postgres"
+      DB_HOST: postgres
+      DB_PORT: 5432
+
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      # =========================
+      # Redis
+      # =========================
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+      # =========================
+      # Email verification / SMTP
+      # =========================
+      OTP_PEPPER: ${OTP_PEPPER}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_FROM: ${MAIL_FROM}
+      MAIL_SMTP_AUTH: ${MAIL_SMTP_AUTH:-true}
+      MAIL_STARTTLS_ENABLE: ${MAIL_STARTTLS_ENABLE:-true}
+
+      # =========================
+      # Server
+      # =========================
+      SERVER_PORT: ${SERVER_PORT:-8080}
+
+      # =========================
+      # JWT
+      # =========================
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_AUDIENCE: ${JWT_AUDIENCE}
+
+      # =========================
+      # Admin Seed
+      # =========================
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_FULL_NAME: ${ADMIN_FULL_NAME}
+
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+
+    networks:
+      - football-network
+
+
+# =========================
+# Volumes
+# =========================
+volumes:
+  football_postgres_data:
+  football_redis_data:
+
+
+# =========================
+# Networks
+# =========================
+networks:
+  football-network:
+    driver: bridge

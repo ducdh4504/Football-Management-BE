@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <meta name="supported-color-schemes" content="light">
+    <title>Xác thực tài khoản Football Management</title>
+    <style>
+        @media only screen and (max-width: 620px) {
+            .email-shell { width: 100% !important; }
+            .email-card { padding: 32px 22px !important; }
+            .otp-code { font-size: 34px !important; letter-spacing: 8px !important; }
+        }
+    </style>
+</head>
+<body style="margin:0; padding:0; background-color:#f0fdf4; color:#17212b; font-family:Arial, Helvetica, sans-serif;">
+<div style="display:none; max-height:0; overflow:hidden; opacity:0; color:transparent;">
+    Mã xác thực Football Management của bạn đã sẵn sàng.
+</div>
+
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
+       style="width:100%; background-color:#f0fdf4; border-collapse:collapse;">
+    <tr>
+        <td align="center" style="padding:40px 16px;">
+            <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" class="email-shell"
+                   style="width:600px; max-width:600px; border-collapse:separate; background-color:#ffffff; border:1px solid #d1fae5; border-radius:24px; overflow:hidden; box-shadow:0 18px 45px rgba(5,150,105,0.12);">
+                <tr>
+                    <td style="height:8px; background-color:#059669; font-size:0; line-height:0;">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="email-card" style="padding:44px 48px 40px;">
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
+                               style="width:100%; border-collapse:collapse;">
+                            <tr>
+                                <td align="center">
+                                    <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+                                           style="border-collapse:collapse;">
+                                        <tr>
+                                            <td align="center" valign="middle"
+                                                style="width:58px; height:58px; border-radius:18px; background-color:#059669; color:#ffffff; font-size:20px; font-weight:800; letter-spacing:-1px;">
+                                                FM
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <p style="margin:18px 0 0; color:#059669; font-size:13px; line-height:20px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase;">
+                                        Football Management
+                                    </p>
+                                    <h1 style="margin:10px 0 0; color:#111827; font-size:28px; line-height:36px; font-weight:800; letter-spacing:-0.6px;">
+                                        Xác thực tài khoản
+                                    </h1>
+                                    <p style="margin:14px auto 0; max-width:430px; color:#64748b; font-size:16px; line-height:25px;">
+                                        Nhập mã gồm 6 chữ số bên dưới để hoàn tất đăng ký và kích hoạt tài khoản của bạn.
+                                    </p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="padding:30px 0 24px;">
+                                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
+                                           style="width:100%; border-collapse:separate; background-color:#ecfdf5; border:1px solid #a7f3d0; border-radius:18px;">
+                                        <tr>
+                                            <td align="center" style="padding:14px 16px 6px; color:#047857; font-size:12px; line-height:18px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;">
+                                                Mã xác thực của bạn
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" class="otp-code" th:text="${otp}"
+                                                style="padding:4px 12px 8px; color:#064e3b; font-family:'Courier New', Courier, monospace; font-size:42px; line-height:52px; font-weight:800; letter-spacing:11px; white-space:nowrap; user-select:all;">
+                                                483102
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" style="padding:0 16px 16px; color:#059669; font-size:12px; line-height:18px; font-weight:600;">
+                                                Chọn hoặc nhấn giữ mã để sao chép
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td align="center">
+                                    <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+                                           style="border-collapse:collapse;">
+                                        <tr>
+                                            <td style="padding:8px 14px; border-radius:999px; background-color:#f8fafc; color:#475569; font-size:13px; line-height:20px; font-weight:600;">
+                                                Mã hết hạn sau <span th:text="${ttlMinutes}" style="color:#047857; font-weight:800;">5</span> phút
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="padding-top:28px;">
+                                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
+                                           style="width:100%; border-collapse:separate; background-color:#f8fafc; border-radius:14px;">
+                                        <tr>
+                                            <td style="padding:17px 18px; color:#64748b; font-size:13px; line-height:21px;">
+                                                <strong style="color:#334155;">Bảo mật tài khoản:</strong>
+                                                Football Management sẽ không bao giờ yêu cầu bạn chia sẻ mã này. Nếu bạn không thực hiện đăng ký, hãy bỏ qua email.
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td align="center" style="padding-top:30px; border-top:1px solid #e2e8f0;">
+                                    <p style="margin:0; color:#94a3b8; font-size:12px; line-height:19px;">
+                                        Đây là email tự động, vui lòng không trả lời email này.<br>
+                                        &copy; <span th:text="${currentYear}">2026</span> Football Management
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

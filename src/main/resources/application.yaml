@@ -1,0 +1,244 @@
+
+  spring:
+    application:
+      name: football-management
+
+    # =========================
+    # Load .env
+    # =========================
+    config:
+      import: optional:file:.env[.properties]
+
+    # =========================
+    # Web Error
+    # Spring Boot 4.x
+    # =========================
+    web:
+      error:
+        include-message: always
+        include-binding-errors: always
+        include-path: always
+        include-stacktrace: never
+
+    # =========================
+    # PostgreSQL
+    # =========================
+    datasource:
+      url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:football_management}
+      username: ${DB_USERNAME:postgres}
+      password: ${DB_PASSWORD:postgres}
+      driver-class-name: org.postgresql.Driver
+
+      hikari:
+        pool-name: FootballManagementHikariPool
+        minimum-idle: 5
+        maximum-pool-size: 20
+        idle-timeout: 30000
+        connection-timeout: 30000
+        max-lifetime: 1800000
+
+    # =========================
+    # JPA / Hibernate
+    # =========================
+    jpa:
+      hibernate:
+        ddl-auto: update
+
+      open-in-view: false
+      show-sql: false
+
+      properties:
+        hibernate:
+          format_sql: true
+          jdbc:
+            time_zone: Asia/Ho_Chi_Minh
+
+    # =========================
+    # Redis
+    # =========================
+    data:
+      redis:
+        host: ${REDIS_HOST:localhost}
+        port: ${REDIS_PORT:6379}
+        username: ${REDIS_USERNAME:}
+        password: ${REDIS_PASSWORD:}
+        timeout: 5000ms
+
+        lettuce:
+          pool:
+            enabled: true
+            max-active: 16
+            max-idle: 8
+            min-idle: 2
+            max-wait: 5000ms
+
+    # =========================
+    # SMTP Email
+    # =========================
+    mail:
+      host: ${MAIL_HOST:localhost}
+      port: ${MAIL_PORT:1025}
+      username: ${MAIL_USERNAME:}
+      password: ${MAIL_PASSWORD:}
+      properties:
+        mail:
+          smtp:
+            auth: ${MAIL_SMTP_AUTH:false}
+            connectiontimeout: 5000
+            timeout: 5000
+            writetimeout: 5000
+            starttls:
+              enable: ${MAIL_STARTTLS_ENABLE:false}
+
+    # =========================
+    # Jackson
+    # =========================
+    jackson:
+      time-zone: Asia/Ho_Chi_Minh
+      default-property-inclusion: non_null
+
+    # =========================
+    # Upload File
+    # =========================
+    servlet:
+      multipart:
+        enabled: true
+        max-file-size: 10MB
+        max-request-size: 20MB
+
+    # =========================
+    # DevTools
+    # =========================
+    devtools:
+      restart:
+        enabled: true
+
+
+  # =========================
+  # Server
+  # =========================
+  server:
+    port: ${SERVER_PORT:8080}
+    forward-headers-strategy: framework
+
+
+  # =========================
+  # SpringDoc / Swagger
+  # =========================
+  springdoc:
+    api-docs:
+      enabled: true
+      path: /v3/api-docs
+
+    swagger-ui:
+      enabled: true
+      path: /swagger-ui.html
+
+    default-consumes-media-type: application/json
+    default-produces-media-type: application/json
+
+
+  # =========================
+  # Application Properties
+  # =========================
+  app:
+
+    # =========================
+    # Seed Admin
+    # =========================
+    seed:
+      admin:
+        email: ${ADMIN_EMAIL:}
+        password: ${ADMIN_PASSWORD:}
+        full-name: ${ADMIN_FULL_NAME:Administrator}
+
+    # =========================
+    # Security / JWT
+    # =========================
+    security:
+      public-endpoints:
+        - "/api/auth/**"
+        - "/swagger-ui/**"
+        - "/swagger-ui.html"
+        - "/v3/api-docs/**"
+        - "/public/**"
+
+      jwt-secret: ${JWT_SECRET}
+
+      issuer: ${JWT_ISSUER:football-management-auth}
+
+      audiences:
+        - ${JWT_AUDIENCE:football-management-api}
+
+    # =========================
+    # Supabase Auth / Google login
+    # =========================
+    supabase:
+      url: ${SUPABASE_URL:}
+      api-key: ${SUPABASE_API_KEY:}
+
+    # =========================
+    # Registration email verification
+    # =========================
+    verification:
+      email:
+        otp-ttl: 5m
+        session-ttl: 24h
+        failed-attempt-window: 15m
+        resend-cooldown: 60s
+        resend-window: 1h
+        ip-rate-limit-window: 1m
+        max-verify-attempts: 5
+        max-resends-per-window: 5
+        max-ip-requests-per-window: 20
+        otp-pepper: ${OTP_PEPPER:}
+        mail-from: ${MAIL_FROM:no-reply@football-management.local}
+
+    # =========================
+    # CORS
+    # =========================
+    cors:
+      allowed-origins:
+        - http://localhost:5173
+        - http://localhost:3000
+        - http://localhost:8081
+
+      allowed-origin-patterns:
+        - https://*.vercel.app
+
+      allowed-methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - OPTIONS
+
+      allowed-headers:
+        - Authorization
+        - Content-Type
+
+      exposed-headers:
+        - Authorization
+
+      allow-credentials: true
+      max-age: 3600
+
+
+  # =========================
+  # Logging
+  # =========================
+  logging:
+    level:
+      root: INFO
+
+      com.nqt.footballmanagement: DEBUG
+
+      org.springframework.web: INFO
+      org.springframework.security: INFO
+
+      org.hibernate.SQL: INFO
+      org.hibernate.orm.jdbc.bind: INFO
+
+    pattern:
+      console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
